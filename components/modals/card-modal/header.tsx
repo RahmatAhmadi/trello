@@ -16,10 +16,8 @@ interface HeaderProps {
 }
 
 export const Header = ({ data }: HeaderProps) => {
-  const [title, setTitle] = useState(data.title);
   const queryClient = useQueryClient();
   const params = useParams();
-  const inputRef = useRef<ElementRef<"input">>(null);
 
   const { execute } = useAction(updateCard, {
     onSuccess: (data) => {
@@ -39,6 +37,10 @@ export const Header = ({ data }: HeaderProps) => {
     },
   });
 
+  const inputRef = useRef<ElementRef<"input">>(null);
+
+  const [title, setTitle] = useState(data.title);
+
   const onBlur = () => {
     inputRef.current?.form?.requestSubmit();
   };
@@ -51,11 +53,15 @@ export const Header = ({ data }: HeaderProps) => {
       return;
     }
 
-    execute({ title, boardId, id: data.id });
+    execute({
+      title,
+      boardId,
+      id: data.id,
+    });
   };
 
   return (
-    <div className="flex items-center gap-x-3 mb-6 w-full">
+    <div className="flex items-start gap-x-3 mb-6 w-full">
       <Layout className="h-5 w-5 mt-1 text-neutral-700" />
       <div className="w-full">
         <form action={onSubmit}>
@@ -64,7 +70,7 @@ export const Header = ({ data }: HeaderProps) => {
             onBlur={onBlur}
             id="title"
             defaultValue={title}
-            className="font-semibold text-xl px-1 text-neutral-700 bg-transparent border-transparent relative -left-1.5 w-[95%] focus-visible:bg-white focus-visible:border-input mb-0.5"
+            className="font-semibold text-xl px-1 text-neutral-700 bg-transparent border-transparent relative -left-1.5 w-[95%] focus-visible:bg-white focus-visible:border-input mb-0.5 truncate"
           />
         </form>
         <p className="text-sm text-muted-foreground">
@@ -77,7 +83,7 @@ export const Header = ({ data }: HeaderProps) => {
 
 Header.Skeleton = function HeaderSkeleton() {
   return (
-    <div className="flex items-center gap-x-3 mb-6">
+    <div className="flex items-start gap-x-3 mb-6">
       <Skeleton className="h-6 w-6 mt-1 bg-neutral-200" />
       <div>
         <Skeleton className="w-24 h-6 mb-1 bg-neutral-200" />
